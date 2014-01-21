@@ -1,5 +1,26 @@
 #!/usr/bin/env ruby
 
+system <<-SH
+  echo "Starting custom buildpack operations";
+
+  BUILD_DIR=#{ARGV[0]};
+  CACHE_DIR=#{ARGV[1]};
+
+  # add BUILD DIR to path
+  export BUILD_DIR;
+
+  IMAGE_PROC_VM_BINARY="https://s3.amazonaws.com/oup-heroku-buildpacks/imgproc.tar.gz";
+
+  cd $BUILD_DIR;
+
+  echo "----> Downloading binary dependencies...";
+
+  curl --silent --max-time 60 --location "$IMAGE_PROC_VM_BINARY" | tar xz;
+
+  echo "----> Done unzipping dependencies...";
+SH
+
+
 # sync output
 $stdout.sync = true
 
